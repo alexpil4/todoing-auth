@@ -18,15 +18,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { passwordMatchSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  passwordConfirm: z.string(),
-});
+const formSchema = z
+  .object({
+    email: z.string().email(),
+  })
+  .and(passwordMatchSchema);
 
 export default function Register() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,7 +50,10 @@ export default function Register() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleValidatedSubmit)}>
+            <form
+              onSubmit={form.handleSubmit(handleValidatedSubmit)}
+              className="flex flex-col gap-2"
+            >
               <FormField
                 control={form.control}
                 name="email"
@@ -89,7 +93,7 @@ export default function Register() {
                   </FormItem>
                 )}
               />
-              <Button className="mt-10" type="submit">
+              <Button className="mt-8" type="submit">
                 Register
               </Button>
             </form>
