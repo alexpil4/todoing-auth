@@ -22,6 +22,7 @@ import { passwordMatchSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { registerUser } from './actions';
 
 const formSchema = z
   .object({
@@ -39,7 +40,16 @@ export default function Register() {
     },
   });
 
-  const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {};
+  const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
+    const { email, password, passwordConfirm } = data;
+    const response = await registerUser({
+      email,
+      password,
+      passwordConfirm,
+    });
+
+    console.log(response);
+  };
 
   return (
     <main className="flex justify-center items-center min-h-screen">
