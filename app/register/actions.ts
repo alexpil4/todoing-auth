@@ -36,7 +36,6 @@ export const registerUser = async ({
     const newUserValidation = newUserSchema.safeParse({ email, password, passwordConfirm });
 
     if (!newUserValidation.success) {
-      console.log('ciao');
       return {
         error: true,
         message: newUserValidation.error.issues[0]?.message ?? 'An error occurred',
