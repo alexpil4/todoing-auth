@@ -39,16 +39,5 @@ export const loginWithCredential = async ({
     };
   }
 
-  // } catch (e) {
-  // if (isApiError(e) && e.code === '23505') {
-  //   return {
-  //     error: true,
-  //     message: 'An account is already registered with that email address.',
-  //   };
-  // }
-  // return {
-  //   error: true,
-  //   message: 'An error occurred.',
-  // };
-  // }
+  
 };
