@@ -1,14 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -22,7 +15,7 @@ import { passwordSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { registerUser } from './actions';
+import { loginWithCredential } from './actions';
 // import Link from 'next/link';
 
 const formSchema = z.object({
@@ -40,18 +33,10 @@ export default function Login() {
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
-    // const { email, password } = data;
-    // const response = await registerUser({
-    //   email,
-    //   password,
-    // });
-    // console.log(response);
-    // if (response?.error) {
-    //   form.setError('email', {
-    //     message: response?.message,
-    //   });
-    // }
-    // console.log(response);
+    await loginWithCredential({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
@@ -102,9 +87,6 @@ export default function Login() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <p></p>
-        </CardFooter>
       </Card>
     </main>
   );

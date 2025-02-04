@@ -1,14 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -132,9 +125,6 @@ export default function Register() {
               </form>
             </Form>
           </CardContent>
-          <CardFooter>
-            <p></p>
-          </CardFooter>
         </Card>
       )}
     </main>
