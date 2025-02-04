@@ -1,21 +1,7 @@
 'use server';
 
-import db from '@/db/drizzle';
 import { passwordSchema } from '@/validation/password';
 import { z } from 'zod';
-import { hash } from 'bcryptjs';
-import { users } from '@/db/usersSchema';
-
-interface ApiError {
-  code: string;
-}
-
-function isApiError(x: unknown): x is ApiError {
-  if (x && typeof x === 'object' && 'code' in x) {
-    return true;
-  }
-  return false;
-}
 
 export const loginWithCredential = async ({
   email,
@@ -38,6 +24,4 @@ export const loginWithCredential = async ({
       message: loginValidation.error?.issues[0]?.message ?? 'An error occurred',
     };
   }
-
-  
 };
