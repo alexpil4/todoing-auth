@@ -1,3 +1,4 @@
+'use server';
 import db from '@/db/drizzle';
 import { passwordMatchSchema } from '@/validation/password';
 import { z } from 'zod';

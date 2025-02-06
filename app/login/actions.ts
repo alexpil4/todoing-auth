@@ -1,3 +1,5 @@
+'use server';
+
 import { signIn } from '@/auth';
 import { passwordSchema } from '@/validation/password';
 import { z } from 'zod';
