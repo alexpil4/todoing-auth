@@ -11,7 +11,6 @@ export const loginWithCredential = async ({
   email: string;
   password: string;
 }) => {
-  // try {
   const loginSchema = z.object({
     email: z.string().email(),
     password: passwordSchema,
@@ -34,5 +33,9 @@ export const loginWithCredential = async ({
     });
   } catch (error) {
     console.log(error);
+    return {
+      error: true,
+      message: 'Incorrect email or password',
+    };
   }
 };
