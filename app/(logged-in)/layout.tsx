@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 export default async function LoggedInLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  // If id does not exists (not logged-in)
+  // If id does not exists (no session)
   if (!session?.user?.id) {
     redirect('/login');
   }

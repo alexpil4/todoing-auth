@@ -39,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    // Here we are going to add user ID to JWT
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
