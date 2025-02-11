@@ -49,15 +49,11 @@ export default function Register() {
       passwordConfirm,
     });
 
-    console.log(response);
-
     if (response?.error) {
       form.setError('email', {
         message: response?.message,
       });
     }
-
-    console.log(response);
   };
 
   return (
