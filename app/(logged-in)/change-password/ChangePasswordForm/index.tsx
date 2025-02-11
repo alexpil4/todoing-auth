@@ -1,5 +1,6 @@
 'use client';
 
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { changePassword } from './actions';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z
   .object({
@@ -23,6 +25,9 @@ const formSchema = z
   .and(passwordMatchSchema);
 
 export default function ChangePasswordForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   // Init react hook form with validation managed by Zod
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,9 +42,18 @@ export default function ChangePasswordForm() {
     const response = await changePassword(data);
 
     if (response?.error) {
-      form.setError('root', {
-        message: response.message,
+      toast({
+        title: 'Password update',
+        description: response.message,
+        variant: 'destructive',
       });
+    } else {
+      toast({
+        title: 'Password update',
+        description: 'Your password has been updated.',
+      });
+      form.reset();
+      router.push('/my-account');
     }
   };
 
