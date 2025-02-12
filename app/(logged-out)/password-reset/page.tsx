@@ -22,10 +22,11 @@ import { passwordMatchSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { passwordReset } from './actions';
+// import { passwordReset } from './actions';
 import Link from 'next/link';
 import { toast } from '@/hooks/use-toast';
 
+// Form schema
 const formSchema = z
   .object({
     email: z.string().email(),
@@ -33,6 +34,7 @@ const formSchema = z
   .and(passwordMatchSchema);
 
 export default function PasswordReset() {
+  // Form instance
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,7 +89,7 @@ export default function PasswordReset() {
                   )}
                 />
                 <Button className="mt-8" type="submit">
-                  Reset password
+                  Reset
                 </Button>
               </fieldset>
             </form>
@@ -97,9 +99,15 @@ export default function PasswordReset() {
         <CardFooter>
           <div className="w-full text-center text-sm text-muted-foreground">
             <p>
-              Already have an account?{' '}
+              Remember your password?{' '}
               <Link href="/login" className="underline">
                 Login
+              </Link>
+            </p>
+            <p>
+              Do not have an account yet?{' '}
+              <Link href="/register" className="underline">
+                Register
               </Link>
             </p>
           </div>
