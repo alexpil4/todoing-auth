@@ -43,7 +43,6 @@ export default function PasswordReset() {
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log('bang');
     await passwordReset(data.email);
     // const { email } = data;
     // const response = await passwordReset({
@@ -61,8 +60,6 @@ export default function PasswordReset() {
     //   });
     // }
   };
-
-  console.log(form.formState.errors);
 
   return (
     <main className="flex justify-center items-center min-h-screen">
