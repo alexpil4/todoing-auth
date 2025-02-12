@@ -18,21 +18,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { passwordMatchSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-// import { passwordReset } from './actions';
-import Link from 'next/link';
-// import { toast } from '@/hooks/use-toast';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { passwordReset } from './actions';
 
 // Form schema
-const formSchema = z
-  .object({
-    email: z.string().email(),
-  })
-  .and(passwordMatchSchema);
+const formSchema = z.object({
+  email: z.string().email(),
+});
 
 export default function PasswordReset() {
   // Get email from query param
@@ -47,7 +43,9 @@ export default function PasswordReset() {
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
-    const { email } = data;
+    console.log('bang');
+    await passwordReset(data.email);
+    // const { email } = data;
     // const response = await passwordReset({
     //   email,
     // });
@@ -64,6 +62,8 @@ export default function PasswordReset() {
     // }
   };
 
+  console.log(form.formState.errors);
+
   return (
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[350px]">
@@ -73,10 +73,7 @@ export default function PasswordReset() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleValidatedSubmit)}
-              className="flex flex-col gap-2"
-            >
+            <form onSubmit={form.handleSubmit(handleValidatedSubmit)}>
               <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
                 <FormField
                   control={form.control}
