@@ -24,7 +24,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 // import { passwordReset } from './actions';
 import Link from 'next/link';
-import { toast } from '@/hooks/use-toast';
+// import { toast } from '@/hooks/use-toast';
+import { useSearchParams } from 'next/navigation';
 
 // Form schema
 const formSchema = z
@@ -34,31 +35,33 @@ const formSchema = z
   .and(passwordMatchSchema);
 
 export default function PasswordReset() {
+  // Get email from query param
+  const searchParams = useSearchParams();
+
   // Form instance
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: decodeURIComponent(searchParams.get('email') ?? ''),
     },
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
     const { email } = data;
-    const response = await passwordReset({
-      email,
-    });
-
-    if (response?.error) {
-      toast({
-        title: 'Password reset',
-        description: response.error,
-      });
-    } else {
-      toast({
-        title: 'Password reset',
-        description: `An email has been sent to ${email}`,
-      });
-    }
+    // const response = await passwordReset({
+    //   email,
+    // });
+    // if (response?.error) {
+    //   toast({
+    //     title: 'Password reset',
+    //     description: response.error,
+    //   });
+    // } else {
+    //   toast({
+    //     title: 'Password reset',
+    //     description: `An email has been sent to ${email}`,
+    //   });
+    // }
   };
 
   return (
