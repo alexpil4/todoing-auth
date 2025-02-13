@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import db from '@/db/drizzle';
+import { passwordResetTokens } from '@/db/passwordResetTokens';
 import { users } from '@/db/usersSchema';
 import { randomBytes } from 'crypto';
 import { eq } from 'drizzle-orm';
@@ -27,6 +28,17 @@ export const passwordReset = async (emailAddress: string) => {
   }
 
   const passwordResetToken = randomBytes(32).toString('hex');
+  // One hour
+  const tokenExpiry = new Date(Date.now() + 3.6e6);
 
-  console.log(passwordResetToken);
+  await db
+    .insert(passwordResetTokens)
+    .values({
+      userId: user.id,
+      token: passwordResetToken,
+      tokenExpiry,
+    })
+    .onConflictDoUpdate({target: passwordResetTokens.userId});
+
+
 };
