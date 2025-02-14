@@ -3,6 +3,7 @@ import db from '@/db/drizzle';
 import { passwordResetTokens } from '@/db/passwordResetTokens';
 import { eq } from 'drizzle-orm';
 import Link from 'next/link';
+import UpdatePasswordForm from './UpdatePasswordForm';
 
 export default async function UpdatePassword({
   searchParams,
@@ -39,7 +40,7 @@ export default async function UpdatePassword({
         </CardHeader>
         <CardContent>
           {isValidToken ? (
-            <>Valid Token</>
+            <UpdatePasswordForm token={token ?? ''}/>
           ) : (
             <Link className="underline" href="/password-reset">
               Request another password reset link
