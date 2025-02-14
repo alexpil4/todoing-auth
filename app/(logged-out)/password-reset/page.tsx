@@ -63,53 +63,65 @@ export default function PasswordReset() {
 
   return (
     <main className="flex justify-center items-center min-h-screen">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Password reset</CardTitle>
-          <CardDescription>Enter your email in order to reset your password.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleValidatedSubmit)}>
-              <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="email" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button className="mt-8" type="submit">
-                  Reset
-                </Button>
-              </fieldset>
-            </form>
-          </Form>
-        </CardContent>
+      {form.formState.isSubmitSuccessful ? (
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Email sent</CardTitle>
+          </CardHeader>
+          <CardContent>
+            If you have an account with us you will receive a password reset email to{' '}
+            {form.getValues('email')}.
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Password reset</CardTitle>
+            <CardDescription>Enter your email in order to reset your password.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleValidatedSubmit)}>
+                <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="email" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button className="mt-8" type="submit">
+                    Send
+                  </Button>
+                </fieldset>
+              </form>
+            </Form>
+          </CardContent>
 
-        <CardFooter>
-          <div className="w-full text-center text-sm text-muted-foreground">
-            <p>
-              Remember your password?{' '}
-              <Link href="/login" className="underline">
-                Login
-              </Link>
-            </p>
-            <p>
-              Do not have an account yet?{' '}
-              <Link href="/register" className="underline">
-                Register
-              </Link>
-            </p>
-          </div>
-        </CardFooter>
-      </Card>
+          <CardFooter>
+            <div className="w-full text-center text-sm text-muted-foreground">
+              <p>
+                Remember your password?{' '}
+                <Link href="/login" className="underline">
+                  Login
+                </Link>
+              </p>
+              <p>
+                Do not have an account yet?{' '}
+                <Link href="/register" className="underline">
+                  Register
+                </Link>
+              </p>
+            </div>
+          </CardFooter>
+        </Card>
+      )}
     </main>
   );
 }
