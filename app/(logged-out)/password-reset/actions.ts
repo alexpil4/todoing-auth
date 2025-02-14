@@ -28,7 +28,7 @@ export const passwordReset = async (emailAddress: string) => {
   }
 
   const passwordResetToken = randomBytes(32).toString('hex');
-  // One hour
+  // Token expires after 1 hour = 36e6
   const tokenExpiry = new Date(Date.now() + 3.6e6);
 
   await db
@@ -38,7 +38,11 @@ export const passwordReset = async (emailAddress: string) => {
       token: passwordResetToken,
       tokenExpiry,
     })
-    .onConflictDoUpdate({target: passwordResetTokens.userId});
-
-
+    .onConflictDoUpdate({
+      target: passwordResetTokens.userId,
+      set: {
+        token: passwordResetToken,
+        tokenExpiry,
+      },
+    });
 };
