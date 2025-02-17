@@ -40,7 +40,7 @@ export const changePassword = async ({
   if (passwordValidation?.error) {
     return {
       error: true,
-      message: passwordValidation?.error.issues?.[0]?.message ?? 'An error occurred',
+      message: passwordValidation?.error.issues?.[0]?.message ?? 'An error occurred.',
     };
   }
 
@@ -54,7 +54,7 @@ export const changePassword = async ({
   if (!user) {
     return {
       error: true,
-      message: 'User not found',
+      message: 'User not found.',
     };
   }
 
@@ -64,7 +64,7 @@ export const changePassword = async ({
   if (!passwordMatch) {
     return {
       error: true,
-      message: 'Current password is incorrect',
+      message: 'Current password is incorrect.',
     };
   }
 

@@ -21,7 +21,7 @@ export const loginWithCredential = async ({
   if (!loginValidation.success) {
     return {
       error: true,
-      message: loginValidation.error?.issues[0]?.message ?? 'An error occurred',
+      message: loginValidation.error?.issues[0]?.message ?? 'An error occurred.',
     };
   }
 
@@ -35,7 +35,7 @@ export const loginWithCredential = async ({
     console.log(error);
     return {
       error: true,
-      message: 'Incorrect email or password',
+      message: 'Incorrect email or password.',
     };
   }
 };

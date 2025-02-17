@@ -40,7 +40,7 @@ export default async function UpdatePassword({
         </CardHeader>
         <CardContent>
           {isValidToken ? (
-            <UpdatePasswordForm token={token ?? ''}/>
+            <UpdatePasswordForm token={token ?? ''} />
           ) : (
             <Link className="underline" href="/password-reset">
               Request another password reset link
@@ -48,7 +48,6 @@ export default async function UpdatePassword({
           )}
         </CardContent>
       </Card>
-      ;
     </main>
   );
 }

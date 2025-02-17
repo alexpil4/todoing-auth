@@ -16,7 +16,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { updatePassword } from './actions';
-import { useRouter } from 'next/navigation';
+
+import Link from 'next/link';
 
 const formSchema = passwordMatchSchema;
 
@@ -25,7 +26,6 @@ type Props = {
 };
 
 export default function UpdatePasswordForm({ token }: Props) {
-  const router = useRouter();
   const { toast } = useToast();
 
   // Init react hook form with validation managed by Zod
@@ -40,6 +40,11 @@ export default function UpdatePasswordForm({ token }: Props) {
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
     const response = await updatePassword({ ...data, token });
 
+    // Refresh the page if token is invalid
+    if (response?.isTokenInvalid) {
+      window.location.reload();
+    }
+
     if (response?.error) {
       toast({
         title: 'Password update',
@@ -52,11 +57,18 @@ export default function UpdatePasswordForm({ token }: Props) {
         description: 'Your password has been updated.',
       });
       form.reset();
-      router.push('/my-account');
     }
   };
 
-  return (
+  return form.formState.isSubmitSuccessful ? (
+    <p>
+      Your password has been updated.
+      <br />
+      <Link className="underline" href="/login">
+        Click here to log in into your account.
+      </Link>
+    </p>
+  ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleValidatedSubmit)}>
         <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
