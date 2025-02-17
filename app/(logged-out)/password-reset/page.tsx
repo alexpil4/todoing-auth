@@ -61,14 +61,7 @@ export default function PasswordReset() {
     // }
   };
 
-  return form.formState.isSubmitSuccessful ? (
-    <div>
-      Your password has been updated.
-      <Link className="underline" href="/login">
-        Click here to log in into your account.
-      </Link>
-    </div>
-  ) : (
+  return (
     <main className="flex justify-center items-center min-h-screen">
       {form.formState.isSubmitSuccessful ? (
         <Card className="w-[350px]">
@@ -76,7 +69,7 @@ export default function PasswordReset() {
             <CardTitle>Email sent</CardTitle>
           </CardHeader>
           <CardContent>
-            If you have an account with us you will receive a password reset email to{' '}
+            If you have an account with us you will receive a password reset email at{' '}
             {form.getValues('email')}.
           </CardContent>
         </Card>
