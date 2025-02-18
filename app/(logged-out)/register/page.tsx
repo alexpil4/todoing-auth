@@ -24,6 +24,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { registerUser } from './actions';
 import Link from 'next/link';
+import { toast } from '@/hooks/use-toast';
 
 const formSchema = z
   .object({
@@ -50,8 +51,15 @@ export default function Register() {
     });
 
     if (response?.error) {
-      form.setError('email', {
-        message: response?.message,
+      toast({
+        title: 'Registration',
+        description: response.message,
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Registration',
+        description: 'Successfully registered.',
       });
     }
   };
@@ -61,7 +69,7 @@ export default function Register() {
       {form.formState.isSubmitSuccessful ? (
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle>Your account has been created</CardTitle>
+            <CardTitle className="text-1xl uppercase">YOUR ACCOUNT HAS BEEN CREATED</CardTitle>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
@@ -72,7 +80,7 @@ export default function Register() {
       ) : (
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle>Register for TODOING</CardTitle>
+            <CardTitle className="text-1xl uppercase">REGISTER TODOING!</CardTitle>
             <CardDescription>Register for a new account.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -121,7 +129,7 @@ export default function Register() {
                       </FormItem>
                     )}
                   />
-                  <Button className="mt-8" type="submit">
+                  <Button className="mt-8 uppercase" type="submit">
                     Register
                   </Button>
                 </fieldset>

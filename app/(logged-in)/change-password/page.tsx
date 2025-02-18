@@ -6,7 +6,7 @@ export default function ChangePassword() {
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Change password</CardTitle>
+          <CardTitle className="text-1xl uppercase">CHANGE PASSWORD</CardTitle>
         </CardHeader>
         <CardContent>
           <ChangePasswordForm />

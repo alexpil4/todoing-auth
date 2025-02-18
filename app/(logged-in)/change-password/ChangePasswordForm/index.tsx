@@ -100,7 +100,7 @@ export default function ChangePasswordForm() {
               </FormItem>
             )}
           />
-          <Button className="mt-8" type="submit">
+          <Button className="mt-8 uppercase" type="submit">
             Change password
           </Button>
         </fieldset>

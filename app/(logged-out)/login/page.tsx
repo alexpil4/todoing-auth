@@ -42,9 +42,10 @@ export default function Login() {
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
+    const { email, password } = data;
     const response = await loginWithCredential({
-      email: data.email,
-      password: data.password,
+      email,
+      password,
     });
 
     if (response?.error) {
@@ -60,7 +61,7 @@ export default function Login() {
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Login into TODOING</CardTitle>
+          <CardTitle className="text-1xl uppercase">WELCOME TODOING!</CardTitle>
           <CardDescription>Login to your account.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -99,7 +100,7 @@ export default function Login() {
                 {form.formState.errors.root?.message && (
                   <FormMessage>{form.formState.errors.root.message}</FormMessage>
                 )}
-                <Button className="mt-8" type="submit">
+                <Button className="mt-8 uppercase" type="submit">
                   Login
                 </Button>
               </fieldset>

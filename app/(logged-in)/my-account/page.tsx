@@ -8,7 +8,7 @@ export default async function MyAccount() {
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle> My account</CardTitle>
+        <CardTitle className="text-1xl uppercase">MY ACCOUNT</CardTitle>
       </CardHeader>
       <CardContent>
         <Label>Email Address</Label>

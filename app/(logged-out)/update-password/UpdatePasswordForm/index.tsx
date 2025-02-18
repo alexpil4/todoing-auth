@@ -98,7 +98,7 @@ export default function UpdatePasswordForm({ token }: Props) {
               </FormItem>
             )}
           />
-          <Button className="mt-8" type="submit">
+          <Button className="mt-8 uppercase" type="submit">
             Update password
           </Button>
         </fieldset>

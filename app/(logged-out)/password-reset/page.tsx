@@ -24,6 +24,7 @@ import { z } from 'zod';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { passwordReset } from './actions';
+import { toast } from '@/hooks/use-toast';
 
 // Form schema
 const formSchema = z.object({
@@ -43,22 +44,19 @@ export default function PasswordReset() {
   });
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
-    await passwordReset(data.email);
-    // const { email } = data;
-    // const response = await passwordReset({
-    //   email,
-    // });
-    // if (response?.error) {
-    //   toast({
-    //     title: 'Password reset',
-    //     description: response.error,
-    //   });
-    // } else {
-    //   toast({
-    //     title: 'Password reset',
-    //     description: `An email has been sent to ${email}`,
-    //   });
-    // }
+    const { email } = data;
+    const response = await passwordReset(email);
+    if (response?.error) {
+      toast({
+        title: 'Password reset',
+        description: response.error,
+      });
+    } else {
+      toast({
+        title: 'Password reset',
+        description: `An email has been sent to ${email}`,
+      });
+    }
   };
 
   return (
@@ -66,7 +64,7 @@ export default function PasswordReset() {
       {form.formState.isSubmitSuccessful ? (
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle>Email sent</CardTitle>
+            <CardTitle className="text-1xl uppercase">Email sent</CardTitle>
           </CardHeader>
           <CardContent>
             If you have an account with us you will receive a password reset email at{' '}
@@ -76,7 +74,7 @@ export default function PasswordReset() {
       ) : (
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle>Password reset</CardTitle>
+            <CardTitle className="text-1xl uppercase">PASSWORD RESET</CardTitle>
             <CardDescription>Enter your email in order to reset your password.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -96,7 +94,7 @@ export default function PasswordReset() {
                       </FormItem>
                     )}
                   />
-                  <Button className="mt-8" type="submit">
+                  <Button className="mt-8 uppercase" type="submit">
                     Send
                   </Button>
                 </fieldset>

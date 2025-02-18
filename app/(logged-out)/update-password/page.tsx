@@ -32,7 +32,7 @@ export default async function UpdatePassword({
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="text-1xl uppercase">
             {isValidToken
               ? 'Update password'
               : 'Your password reset link is invalid or has expired.'}

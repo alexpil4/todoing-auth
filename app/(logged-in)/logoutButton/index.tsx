@@ -13,7 +13,7 @@ export default function LogoutButton() {
   };
 
   return (
-    <Button size="sm" onClick={handleLogout}>
+    <Button className="uppercase" size="sm" onClick={handleLogout}>
       Logout
     </Button>
   );
