@@ -1,10 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { get2FASecret } from './action';
 import { useToast } from '@/hooks/use-toast';
 import { QRCodeSVG } from 'qrcode.react';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 type Props = {
   is2FAActivated: boolean;
@@ -39,6 +45,10 @@ export default function TwoFactorAuthForm({ is2FAActivated }: Props) {
     setStep(step);
   };
 
+  const handleOTPSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       {!isActivated && (
@@ -63,9 +73,39 @@ export default function TwoFactorAuthForm({ is2FAActivated }: Props) {
                 variant="outline"
                 onClick={() => goToStep(1)}
               >
-                Cancel
+                Back
               </Button>
             </div>
+          )}
+          {step === 3 && (
+            <form onSubmit={handleOTPSubmit} className="flex flex-col gap-2">
+              <p className="text-xs text-muted-foreground py-4">
+                Please enter the one-time passcode from the Google Authenticator app
+              </p>
+              <InputOTP maxLength={6}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button type="submit" className="uppercase mt-8 w-full">
+                Activate
+              </Button>
+              <Button
+                className="uppercase w-full mt-4"
+                variant="outline"
+                onClick={() => goToStep(2)}
+              >
+                Back
+              </Button>
+            </form>
           )}
         </div>
       )}
