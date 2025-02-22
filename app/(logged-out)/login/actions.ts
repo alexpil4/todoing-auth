@@ -11,9 +11,11 @@ import { z } from 'zod';
 export const loginWithCredential = async ({
   email,
   password,
+  token,
 }: {
   email: string;
   password: string;
+  token?: string;
 }) => {
   const loginSchema = z.object({
     email: z.string().email(),
@@ -33,6 +35,7 @@ export const loginWithCredential = async ({
     await signIn('credentials', {
       email,
       password,
+      token,
       redirect: false,
     });
   } catch (error) {

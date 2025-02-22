@@ -33,6 +33,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { toast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -56,8 +57,23 @@ export default function Login() {
     setOtp(value);
   };
 
-  const goToStep = (step: number) => {
-    setStep(step);
+  const handleOTPSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await loginWithCredential({
+      email: form.getValues('email'),
+      password: form.getValues('password'),
+      token: otp,
+    });
+
+    if (response?.error) {
+      toast({
+        variant: 'destructive',
+        title: response.message,
+      });
+      return;
+    } else {
+      router.push('/my-account');
+    }
   };
 
   const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -164,25 +180,24 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <InputOTP maxLength={6} value={otp} onChange={handleOTPTyping}>
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-              </InputOTPGroup>
-              <InputOTPSeparator />
-              <InputOTPGroup>
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-              </InputOTPGroup>
-            </InputOTP>
-            <Button disabled={otp.length !== 6} type="submit" className="uppercase mt-8 w-full">
-              Activate 2FA
-            </Button>
-            <Button className="uppercase w-full mt-4" variant="outline" onClick={() => goToStep(2)}>
-              Back
-            </Button>
+            <form onSubmit={handleOTPSubmit} className="flex flex-col gap-2">
+              <InputOTP maxLength={6} value={otp} onChange={handleOTPTyping}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button disabled={otp.length !== 6} type="submit" className="uppercase mt-8 w-full">
+                VERIFY OTP
+              </Button>
+            </form>
           </CardContent>
         </Card>
       )}
