@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { FormEvent, useEffect, useState } from 'react';
-import { activate2FA, get2FASecret } from './action';
+import { activate2FA, disable2FA, get2FASecret } from './action';
 import { useToast } from '@/hooks/use-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import {
@@ -43,17 +43,21 @@ export default function TwoFactorAuthForm({ is2FAActivated }: Props) {
   };
 
   const handleDisable2FA = async () => {
-    const response = await get2FASecret();
+    const response = await disable2FA();
 
-    if (response.error) {
+    if (response?.error) {
       toast({
         variant: 'destructive',
         title: response.message,
       });
       return;
     }
-    setStep(2);
-    setCode(response.twoFactorSecret ?? '');
+
+    toast({
+      title: 'Two-Factor Authentication has been disabled',
+    });
+
+    setIsActivated(false);
   };
   const goToStep = (step: number) => {
     setStep(step);
