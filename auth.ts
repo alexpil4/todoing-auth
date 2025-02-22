@@ -10,7 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       credentials: {
         email: {},
-        password: {},
+        password: {}, 
       },
       async authorize(credentials) {
         const [user] = await db

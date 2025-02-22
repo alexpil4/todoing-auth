@@ -22,9 +22,17 @@ import { passwordSchema } from '@/validation/password';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { loginWithCredential } from './actions';
+import { loginWithCredential, preLoginCheck } from './actions';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useState } from 'react';
+
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -41,17 +49,35 @@ export default function Login() {
     },
   });
 
-  const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
-    const { email, password } = data;
-    const response = await loginWithCredential({
-      email,
-      password,
-    });
+  const [step, setStep] = useState(1);
+  const [otp, setOtp] = useState('');
 
-    if (response?.error) {
-      form.setError('root', { message: response.message });
+  const handleOTPTyping = (value: string) => {
+    setOtp(value);
+  };
+
+  const goToStep = (step: number) => {
+    setStep(step);
+  };
+
+  const handleValidatedSubmit = async (data: z.infer<typeof formSchema>) => {
+    const preLoginResponse = await preLoginCheck(data);
+
+    if (preLoginResponse?.error) {
+      form.setError('root', { message: preLoginResponse.message });
+      return;
+    }
+
+    if (preLoginResponse.twoFactorAuthActivated) {
+      setStep(2);
     } else {
-      router.push('/my-account');
+      const response = await loginWithCredential(data);
+
+      if (response?.error) {
+        form.setError('root', { message: response.message });
+      } else {
+        router.push('/my-account');
+      }
     }
   };
 
@@ -59,74 +85,107 @@ export default function Login() {
 
   return (
     <main className="flex justify-center items-center min-h-screen">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle className="text-1xl uppercase">WELCOME TODOING!</CardTitle>
-          <CardDescription>Login to your account.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleValidatedSubmit)}
-              className="flex flex-col gap-2"
-            >
-              <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="email" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="password" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {form.formState.errors.root?.message && (
-                  <FormMessage>{form.formState.errors.root.message}</FormMessage>
-                )}
-                <Button className="mt-8 uppercase" type="submit">
-                  Login
-                </Button>
-              </fieldset>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter>
-          <div className="w-full text-center text-sm text-muted-foreground">
-            <p>
-              Do not have an account yet?{' '}
-              <Link href="/register" className="underline">
-                Register
-              </Link>
-            </p>
-            <p>
-              Forgot the password?{' '}
-              <Link
-                href={`/password-reset${email ? `?email=${encodeURIComponent(email)}` : ''}`}
-                className="underline"
+      {step == 1 && (
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle className="text-1xl uppercase">WELCOME TODOING!</CardTitle>
+            <CardDescription>Login to your account.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleValidatedSubmit)}
+                className="flex flex-col gap-2"
               >
-                Reset my password
-              </Link>
-            </p>
-          </div>
-        </CardFooter>
-      </Card>
+                <fieldset disabled={form.formState.isSubmitting} className="flex flex-col gap-2">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="email" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="password" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {form.formState.errors.root?.message && (
+                    <FormMessage>{form.formState.errors.root.message}</FormMessage>
+                  )}
+                  <Button className="mt-8 uppercase" type="submit">
+                    Login
+                  </Button>
+                </fieldset>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter>
+            <div className="w-full text-center text-sm text-muted-foreground">
+              <p>
+                Do not have an account yet?{' '}
+                <Link href="/register" className="underline">
+                  Register
+                </Link>
+              </p>
+              <p>
+                Forgot the password?{' '}
+                <Link
+                  href={`/password-reset${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+                  className="underline"
+                >
+                  Reset my password
+                </Link>
+              </p>
+            </div>
+          </CardFooter>
+        </Card>
+      )}
+      {step === 2 && (
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>One-Time Passcode</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground py-4">
+              Enter the one-time passcode for Todoing displayed into your Google Authenticator app:
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <InputOTP maxLength={6} value={otp} onChange={handleOTPTyping}>
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+              </InputOTPGroup>
+              <InputOTPSeparator />
+              <InputOTPGroup>
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+            <Button disabled={otp.length !== 6} type="submit" className="uppercase mt-8 w-full">
+              Activate 2FA
+            </Button>
+            <Button className="uppercase w-full mt-4" variant="outline" onClick={() => goToStep(2)}>
+              Back
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </main>
   );
 }
